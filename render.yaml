@@ -6,6 +6,6 @@ services:
     startCommand: python main.py
     envVars:
       - key: BOT_TOKEN
-        value: YOUR_TELEGRAM_BOT_TOKEN
+        value: 7861669024:AAFKFY1TR_ZE_kmn-nv9D9onQgSM7k-LS7E
       - key: CHANNEL_ID
-        value: @rabota_ovz
+        value: "@rabotaO'VZ_bot"  # Или числовой ID (напр. "-100123456789")
