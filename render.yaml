@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: rabot-ovz-bot
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      - key: BOT_TOKEN
+        value: YOUR_TELEGRAM_BOT_TOKEN
+      - key: CHANNEL_ID
+        value: @rabota_ovz
