@@ -1,4 +1,5 @@
 import logging
+from flask import Flask, request
 from telebot import TeleBot, types
 from menu import main_menu
 
@@ -9,69 +10,39 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-bot = TeleBot("7861669024:AAFKFY1TR_ZE_kmn-nv9D9onQgSM7k-LS7E")  # Замените на ваш токен
+app = Flask(__name__)
+bot = TeleBot("ВАШ_ТОКЕН")  # Замените на реальный токен
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     try:
         user = message.from_user
         logger.info(f"Пользователь {user.id} запустил бота")
-        
         bot.send_message(
             message.chat.id,
-            f"👋 Привет, {user.first_name}! Я помогу найти работу для людей с инвалидностью.\n"
-            "Выберите действие в меню:",
+            f"👋 Привет, {user.first_name}! Я бот для поиска работы.\nВыберите действие:",
             reply_markup=main_menu()
         )
     except Exception as e:
         logger.error(f"Ошибка в send_welcome: {e}")
 
-@bot.message_handler(func=lambda message: message.text == '🔍 Поиск вакансий')
-def search_vacancies(message):
-    try:
-        msg = bot.send_message(
-            message.chat.id,
-            "🔎 Введите ключевые слова (например, 'удалённая работа'):",
-            reply_markup=types.ReplyKeyboardRemove()
-        )
-        bot.register_next_step_handler(msg, process_search_query)
-    except Exception as e:
-        logger.error(f"Ошибка в search_vacancies: {e}")
-
-def process_search_query(message):
-    try:
-        query = message.text
-        logger.info(f"Поиск по запросу: {query}")
-        
-        # Здесь будет логика поиска вакансий
-        bot.send_message(
-            message.chat.id,
-            f"🔍 Ищу вакансии по запросу: '{query}'...",
-            reply_markup=main_menu()
-        )
-    except Exception as e:
-        logger.error(f"Ошибка в process_search_query: {e}")
-
-@bot.message_handler(func=lambda message: message.text == '⬅️ Назад')
-def back_to_menu(message):
-    try:
-        bot.send_message(
-            message.chat.id,
-            "Главное меню:",
-            reply_markup=main_menu()
-        )
-    except Exception as e:
-        logger.error(f"Ошибка в back_to_menu: {e}")
+@app.route('/', methods=['POST'])
+def webhook():
+    if request.headers.get('content-type') == 'application/json':
+        json_data = request.get_data().decode('utf-8')
+        update = types.Update.de_json(json_data)
+        bot.process_new_updates([update])
+        return ''
+    return 'Bad request', 400
 
 if __name__ == '__main__':
-    logger.info("Бот запускается...")
-    try:
-        # Удаляем вебхук перед запуском polling
-        bot.delete_webhook()
-        logger.info("Webhook удален, запускаем polling...")
-        
-        bot.polling(none_stop=True, interval=2)
-    except Exception as e:
-        logger.error(f"Ошибка при запуске бота: {e}")
-    finally:
-        logger.info("Бот остановлен")
+    logger.info("Удаляем старый вебхук...")
+    bot.remove_webhook()
+    
+    # Установите ваш реальный URL Render
+    webhook_url = "https://your-render-service.onrender.com"
+    logger.info(f"Устанавливаем вебхук на {webhook_url}")
+    bot.set_webhook(url=webhook_url)
+    
+    logger.info("Запускаем Flask сервер...")
+    app.run(host='0.0.0.0', port=10000)
