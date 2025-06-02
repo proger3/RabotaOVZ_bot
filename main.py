@@ -1,5 +1,5 @@
-import logging
-from telebot import TeleBot, types
+import telebot
+from telebot import apihelper
 from menu import (
     main_menu,
     vacancy_search_options,
@@ -16,6 +16,15 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 bot = TeleBot(BOT_TOKEN)
+
+# Удаляем вебхук перед запуском
+try:
+    bot.delete_webhook()
+except Exception as e:
+    print(f"Ошибка при удалении вебхука: {e}")
+
+# Затем запускаем поллинг
+bot.polling(none_stop=True)
 
 # /start и /help
 @bot.message_handler(commands=['start', 'help'])
