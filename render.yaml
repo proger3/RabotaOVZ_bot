@@ -9,3 +9,5 @@ services:
     envVars:
       - key: BOT_TOKEN
         value: ваш_токен_бота
+      - key: WEBHOOK_URL
+        value: https://your-render-service.onrender.com
