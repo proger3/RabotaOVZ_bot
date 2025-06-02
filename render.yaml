@@ -1,13 +1,11 @@
 services:
   - type: web
-    name: rabotaOVZ_bot  # Укажите своё название
+    name: rabotaOVZ-bot
     runtime: python
-    env: python
     buildCommand: |
-      pip install --upgrade pip
-      pip install python-telegram-bot==13.7
+      pip install pyTelegramBotAPI flask
       pip install -r requirements.txt
     startCommand: python main.py
     envVars:
       - key: BOT_TOKEN
-        value: 7861669024:AAFKFY1TR_ZE_kmn-nv9D9onQgSM7k-LS7E
+        value: ваш_токен_бота
