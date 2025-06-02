@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: @rabotaOVZ_bot  # Укажите своё название
+    name: rabotaOVZ_bot  # Укажите своё название
     runtime: python
     env: python
     buildCommand: |
