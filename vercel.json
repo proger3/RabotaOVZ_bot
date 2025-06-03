@@ -5,7 +5,8 @@
     "use": "@vercel/python"
   }],
   "routes": [{
-    "src": "/(.*)",
-    "dest": "api/bot.py"
+    "src": "/api",
+    "dest": "api/bot.py",
+    "methods": ["POST"]
   }]
 }
