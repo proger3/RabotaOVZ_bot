@@ -1,4 +1,5 @@
 from http.server import BaseHTTPRequestHandler
+import os  # Добавьте эту строку
 from telebot import TeleBot
 import json
 
