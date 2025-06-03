@@ -5,6 +5,10 @@ import os
 app = Flask(__name__)
 bot = TeleBot(os.getenv('BOT_TOKEN'))
 
+# Обработчик GET-запросов (для проверки работоспособности)
+@app.route('/')
+def health_check():
+    return jsonify({"status": "ok", "message": "Bot is running"}), 200
 # Создаём меню
 def main_menu():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
