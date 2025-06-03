@@ -1,12 +1,21 @@
 {
   "version": 2,
-  "builds": [{
-    "src": "api/bot.py",
-    "use": "@vercel/python"
-  }],
-  "routes": [{
-    "src": "/api",
-    "dest": "api/bot.py",
-    "methods": ["POST"]
-  }]
+  "builds": [
+    {
+      "src": "api/bot.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api",
+      "dest": "api/bot.py",
+      "methods": ["GET", "POST"]
+    },
+    {
+      "src": "/(.*)",
+      "dest": "api/bot.py",
+      "status": 200
+    }
+  ]
 }
