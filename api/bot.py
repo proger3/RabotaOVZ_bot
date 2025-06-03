@@ -1,33 +1,42 @@
-from http.server import BaseHTTPRequestHandler
-import json
-import logging
-from telebot import TeleBot
+from flask import Flask, request
+from telebot import TeleBot, types
 import os
- 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
+app = Flask(__name__)
 bot = TeleBot(os.getenv('BOT_TOKEN'))
 
-@bot.message_handler(commands=['start', 'help'])
+# Создаём меню
+def main_menu():
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    btn1 = types.KeyboardButton('🔍 Поиск вакансий')
+    btn2 = types.KeyboardButton('ℹ️ Помощь')
+    markup.add(btn1, btn2)
+    return markup
+
+# Обработчики команд
+@bot.message_handler(commands=['start'])
 def send_welcome(message):
-    bot.reply_to(message, "Бот работает! ✅")
+    bot.send_message(
+        message.chat.id,
+        "Добро пожаловать! Выберите действие:",
+        reply_markup=main_menu()
+    )
 
-class Handler(BaseHTTPRequestHandler):
-    def do_POST(self):
-        try:
-            content_length = int(self.headers['Content-Length'])
-            post_data = self.rfile.read(content_length)
-            update = json.loads(post_data.decode('utf-8'))
-            bot.process_new_updates([update])
-        except Exception as e:
-            logger.error(f"Error processing update: {e}")
-        
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(b'OK')
+@bot.message_handler(func=lambda m: m.text == '🔍 Поиск вакансий')
+def search_vacancies(message):
+    bot.send_message(message.chat.id, "Введите профессию для поиска:")
 
-def endpoint(request):
-    handler = Handler(request)
-    handler.handle_request()
-    return handler
+@bot.message_handler(func=lambda m: m.text == 'ℹ️ Помощь')
+def show_help(message):
+    bot.send_message(message.chat.id, "Этот бот помогает найти работу.")
+
+# Вебхук
+@app.route('/api', methods=['POST'])
+def webhook():
+    if request.headers.get('content-type') == 'application/json':
+        update = types.Update.de_json(request.get_data().decode('utf-8'))
+        bot.process_new_updates([update])
+    return 'OK', 200
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=10000)
