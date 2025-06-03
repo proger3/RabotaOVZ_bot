@@ -2,7 +2,7 @@ from http.server import BaseHTTPRequestHandler
 from telebot import TeleBot
 import json
 
-bot = TeleBot("ВАШ_ТОКЕН")
+bot = TeleBot(7861669024:AAHABR3Kt4rSyq-w796JmR6DQFFmNJoSoUw)
 
 # Обработчики команд бота
 @bot.message_handler(commands=['start'])
