@@ -1,2 +1,1 @@
-BOT_TOKEN = "7861669024:AAFKFY1TR_ZE_kmn-nv9D9onQgSM7k-LS7E"
 ADMIN_IDS = [651916072]  # ID админов для уведомлений
