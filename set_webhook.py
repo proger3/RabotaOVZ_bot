@@ -1,7 +1,7 @@
 import requests
 
-TOKEN = "ВАШ_ТОКЕН"  # Замените на реальный токен
-VERCEL_URL = "https://ваш-проект.vercel.app/api"  # Ваш URL из Vercel
+TOKEN = BOT_TOKEN  # Замените на реальный токен
+VERCEL_URL = https://vercel.com/proger3s-projects/rabota-ovz-bot  # Ваш URL из Vercel
 
 # Удаляем старый вебхук
 requests.get(f"https://api.telegram.org/bot{TOKEN}/deleteWebhook")
